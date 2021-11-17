@@ -17,8 +17,14 @@ public class ProdutosController {
 	private ProdutoRepository produtoRepository;
 
 	@RequestMapping("/topicos")
-	public List<ProdutoDto> lista() {
-		List<Produto> produtos = produtoRepository.findAll();
-		return ProdutoDto.converter(produtos);
+	public List<ProdutoDto> lista(String nomeProduto) {
+		if(nomeProduto == null) {
+			List<Produto> produtos = produtoRepository.findAll();
+			return ProdutoDto.converter(produtos);
+		}else {
+			List<Produto> produtos = produtoRepository.findByNome(nomeProduto);
+			return ProdutoDto.converter(produtos);
+		}
+	
 	}
 }
