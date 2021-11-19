@@ -14,8 +14,24 @@ public class Produto {
 	private Long id;
 	private String nome;
 	private String descricao;
-	private Integer quantidade;
-	private LocalDateTime dataCriacao;
+	private String quantidade;
+	private LocalDateTime dataCriacao = LocalDateTime.now();
+	
+	
+	
+
+	public Produto() {
+	}
+	
+	
+
+	public Produto(String nome, String descricao, String quantidade) {
+		this.nome = nome;
+		this.descricao = descricao;
+		this.quantidade = quantidade;
+	}
+
+
 
 	public String getDescricao() {
 		return descricao;
@@ -41,11 +57,11 @@ public class Produto {
 		this.nome = nome;
 	}
 
-	public Integer getQuantidade() {
+	public String getQuantidade() {
 		return quantidade;
 	}
 
-	public void setQuantidade(Integer quantidade) {
+	public void setQuantidade(String quantidade) {
 		this.quantidade = quantidade;
 	}
 
