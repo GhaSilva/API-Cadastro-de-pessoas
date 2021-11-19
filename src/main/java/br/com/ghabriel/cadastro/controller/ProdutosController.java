@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.ghabriel.cadastro.controller.dto.DetalhesProdutoDto;
 import br.com.ghabriel.cadastro.controller.dto.ProdutoDto;
+import br.com.ghabriel.cadastro.controller.form.AtualizaçãoProdutoForm;
 import br.com.ghabriel.cadastro.controller.form.ProdutoForm;
 import br.com.ghabriel.cadastro.modelo.Produto;
 import br.com.ghabriel.cadastro.repository.ProdutoRepository;
@@ -58,7 +60,20 @@ public class ProdutosController {
 
 	@GetMapping("/{id}")
 	public DetalhesProdutoDto detalhar(@PathVariable Long id) {
-		Produto produto = produtoRepository.getOne(id);
+		Produto produto = produtoRepository.getById(id);
 		return new DetalhesProdutoDto(produto);
 	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<ProdutoDto> atualizar(@PathVariable Long id, @RequestBody AtualizaçãoProdutoForm form)
+			throws Exception {
+		if (form.getDescricao() == null || form.getDescricao().isEmpty()
+				|| form.getQuantidade() == null | form.getQuantidade().isEmpty()) {
+			throw new Exception("Campos inválidos");
+		}
+		Produto produto = form.atualizar(id, produtoRepository);
+		return ResponseEntity.ok(new ProdutoDto(produto));
+
+	}
+
 }
