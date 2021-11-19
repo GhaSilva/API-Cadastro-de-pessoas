@@ -2,6 +2,7 @@ package br.com.ghabriel.cadastro.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -62,9 +63,13 @@ public class ProdutosController {
 	}
 
 	@GetMapping("/{id}")
-	public DetalhesProdutoDto detalhar(@PathVariable Long id) {
-		Produto produto = produtoRepository.getById(id);
-		return new DetalhesProdutoDto(produto);
+	public ResponseEntity<DetalhesProdutoDto> detalhar(@PathVariable Long id) {
+		Optional<Produto> produto = produtoRepository.findById(id);
+		if (produto.isPresent()) {
+			return ResponseEntity.ok(new DetalhesProdutoDto(produto.get()));
+		}
+		return ResponseEntity.notFound().build();
+
 	}
 
 	@PutMapping("/{id}")
@@ -75,19 +80,28 @@ public class ProdutosController {
 				|| form.getQuantidade() == null | form.getQuantidade().isEmpty()) {
 			throw new Exception("Campos inválidos");
 		}
-		Produto produto = form.atualizar(id, produtoRepository);
-		return ResponseEntity.ok(new ProdutoDto(produto));
+
+		Optional<Produto> optional = produtoRepository.findById(id);
+		if (optional.isPresent()) {
+			Produto produto = form.atualizar(id, produtoRepository);
+			return ResponseEntity.ok(new ProdutoDto(produto));
+		}
+		return ResponseEntity.notFound().build();
 
 	}
-	
+
 	@DeleteMapping("{/id}")
 	@Transactional
-	public ResponseEntity<?> remover(@PathVariable Long id){
-		produtoRepository.deleteById(id);
-		return ResponseEntity.ok().build();
-		
-		
+	public ResponseEntity<?> remover(@PathVariable Long id) {
+
+		Optional<Produto> optional = produtoRepository.findById(id);
+		if (optional.isPresent()) {
+			produtoRepository.deleteById(id);
+			return ResponseEntity.ok().build();
+		}
+
+		return ResponseEntity.notFound().build();
+
 	}
-	
 
 }
