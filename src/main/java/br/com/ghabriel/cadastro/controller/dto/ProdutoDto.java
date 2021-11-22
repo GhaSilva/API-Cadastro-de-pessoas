@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+
 import br.com.ghabriel.cadastro.modelo.Produto;
 
 public class ProdutoDto {
@@ -38,9 +40,9 @@ public class ProdutoDto {
 		return dataCriacao;
 	}
 
-	public static List<ProdutoDto> converter(List<Produto> produtos) {
+	public static Page<ProdutoDto> converter(Page<Produto> produtos) {
 		
-		return produtos.stream().map(ProdutoDto::new).collect(Collectors.toList());
+		return produtos.map(ProdutoDto::new);
 	}
 
 }

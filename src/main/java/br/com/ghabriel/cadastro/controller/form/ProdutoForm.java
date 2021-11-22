@@ -1,17 +1,12 @@
 package br.com.ghabriel.cadastro.controller.form;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import br.com.ghabriel.cadastro.modelo.Produto;
 
 public class ProdutoForm {
 	
-	@NotNull @NotEmpty
 	private String nome;
-	@NotNull @NotEmpty
 	private String descricao;
-	@NotNull @NotEmpty
 	private String quantidade;
 
 	public String getNome() {

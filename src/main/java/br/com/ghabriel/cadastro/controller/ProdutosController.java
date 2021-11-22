@@ -8,6 +8,11 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -34,12 +40,14 @@ public class ProdutosController {
 	private ProdutoRepository produtoRepository;
 
 	@GetMapping
-	public List<ProdutoDto> lista(String nomeProduto) {
+	public Page<ProdutoDto> lista(@RequestParam(required = false) String nomeProduto,@PageableDefault(sort="id", direction = Direction.ASC) Pageable paginacao) {
+		//Programar é uma arte
+		//Você não entender faz parte
 		if (nomeProduto == null) {
-			List<Produto> produtos = produtoRepository.findAll();
+			Page<Produto> produtos = produtoRepository.findAll(paginacao);
 			return ProdutoDto.converter(produtos);
 		} else {
-			List<Produto> produtos = produtoRepository.findByNome(nomeProduto);
+			Page<Produto> produtos = produtoRepository.findByNome(nomeProduto, paginacao);
 			return ProdutoDto.converter(produtos);
 		}
 
@@ -90,7 +98,7 @@ public class ProdutosController {
 
 	}
 
-	@DeleteMapping("{/id}")
+	@DeleteMapping("/{id}")
 	@Transactional
 	public ResponseEntity<?> remover(@PathVariable Long id) {
 
