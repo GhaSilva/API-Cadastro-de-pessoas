@@ -40,9 +40,10 @@ public class ProdutosController {
 	private ProdutoRepository produtoRepository;
 
 	@GetMapping
-	public Page<ProdutoDto> lista(@RequestParam(required = false) String nomeProduto,@PageableDefault(sort="id", direction = Direction.ASC) Pageable paginacao) {
-		//Programar é uma arte
-		//Você não entender faz parte
+	public Page<ProdutoDto> lista(@RequestParam(required = false) String nomeProduto,
+			@PageableDefault(sort = "id", direction = Direction.ASC) Pageable paginacao) {
+		// Programar é uma arte
+		// Você não entender faz parte
 		if (nomeProduto == null) {
 			Page<Produto> produtos = produtoRepository.findAll(paginacao);
 			return ProdutoDto.converter(produtos);
