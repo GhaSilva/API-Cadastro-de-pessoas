@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ghabriel.cadastro.config.security.TokenService;
+import br.com.ghabriel.cadastro.controller.dto.TokenDto;
 import br.com.ghabriel.cadastro.controller.form.LoginForm;
 
 @RestController
@@ -26,13 +27,12 @@ public class AutenticacaoController {
 	private TokenService tokenService;
 	
 	@PostMapping
-	public ResponseEntity<?> autenticar(@RequestBody LoginForm form){
+	public ResponseEntity<TokenDto> autenticar(@RequestBody LoginForm form){
 		UsernamePasswordAuthenticationToken dadosLogin = form.converter();
 		try {
 			Authentication authentication = authManager.authenticate(dadosLogin);
 			String token = tokenService.gerarToken(authentication);
-			System.out.println(token);
-			return ResponseEntity.ok().build();
+			return ResponseEntity.ok(new TokenDto(token, "Bearer"));
 		} catch (AuthenticationException e) {
 			return ResponseEntity.badRequest().build();
 			
